@@ -1,0 +1,86 @@
+unsigned int Duty_cycle;
+int AMBULANCE_SWITCH = 7;
+int Pwm = 6;
+char tag_found[13];
+char tags_found[13];
+
+void setup() {
+             // put your setup code here, to run once:
+ Serial.begin(9600);
+ 
+ pinMode(AMBULANCE_SWITCH,INPUT);
+ pinMode(Pwm,OUTPUT);
+ Duty_cycle = 0;   
+          
+}
+
+void loop() {
+    
+    Duty_cycle = 153;
+    analogWrite(Pwm,Duty_cycle);
+          
+  if(Serial.available() > 11) 
+  {
+     char i = 0;
+    while(i < 12) 
+    {
+      tag_found[i] = Serial.read();
+      i++;
+    }
+    tag_found[i] = '\0';
+
+
+  if(String(tag_found) == "52003260D5D5") 
+    { 
+
+      Duty_cycle = 102;
+      analogWrite(Pwm,Duty_cycle);
+      
+      delay(5000);
+      Duty_cycle = 153;
+      analogWrite(Pwm,Duty_cycle);
+      
+   tag_found[i] = '\0';
+  }
+  else if(String(tag_found) == "520014E70FAE") 
+    { 
+
+      Duty_cycle = 180;
+      analogWrite(Pwm,Duty_cycle);
+      delay(5000);
+      Duty_cycle = 153;
+      analogWrite(Pwm,Duty_cycle);
+   tag_found[i] = '\0';
+  }
+
+  else if(String(tag_found) == "520036A29C5A") 
+    { 
+
+      Duty_cycle = 255;
+      analogWrite(Pwm,Duty_cycle);
+      delay(5000);
+      Duty_cycle = 153;
+      analogWrite(Pwm,Duty_cycle);
+      tag_found[i] = '\0';
+  }
+  }
+
+  while(digitalRead(AMBULANCE_SWITCH) == 1)
+  {
+     char i = 0;
+     Duty_cycle = 153;
+     analogWrite(Pwm,Duty_cycle);
+     tag_found[i] = '0';
+  if(Serial.available() > 11) 
+  {
+     char i = 0;
+    while(i < 12) 
+    {
+      tags_found[i] = Serial.read();
+      i++;
+    }
+    tags_found[i] = '\0';
+   
+  }
+  }
+}
